@@ -3,6 +3,23 @@ import { Link } from 'react-router-dom';
 
 export default class Adoption extends Component {
   render() {
+    const people = this.props.people;
+    const peopleMap = people.map(people => {
+      return (
+        <div className='person'>
+          <h3>{people}</h3>
+        </div>
+      );
+    });
+
+    let catHTML;
+    if (this.props.pets.cat) {
+      catHTML = (
+        <div className='animal'>
+          <img src={this.props.pets.cat.imageURL} />
+        </div> 
+      )
+    }
     return (
       <div className='adoption'>
         <Link to='/'>
@@ -20,20 +37,16 @@ export default class Adoption extends Component {
 
         <div className='list'>
           <div className='animal'>
-            <img alt='this is a dog' src='https://images.pexels.com/photos/33053/dog-young-dog-small-dog-maltese.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500' />
-            <div className='content'>
-              <h4> Zim </h4>
-              <p> 3yo </p>
-              <p> Male </p>
-              <h4> Story: </h4>
-              <p> Owner passed away. </p>
-            </div>
-            <button> Adopt! </button>
+            <img src={this.props.pets.cat ? this.props.pets.cat.imageURL : null} />
+            <p>{this.props.pets.cat ? this.props.pets.cat.name : null}</p>
+            <p>{this.props.pets.cat ? this.props.pets.cat.breed : null}</p>
+            <p>{this.props.pets.cat ? this.props.pets.cat.gender : null}</p>
+            <p>{this.props.pets.cat ? this.props.pets.cat.description : null}</p>
+            <p>{this.props.pets.cat ? this.props.pets.cat.story : null}</p>
+
           </div>
         </div>
-        <div className='queue'>
-          <p> Randy Lahey </p>
-        </div>
+        <div className='queue'>{peopleMap}</div>
       </div>
     );
   }
