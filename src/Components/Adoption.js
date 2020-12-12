@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { postPerson } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -17,17 +18,24 @@ export default class Adoption extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    let input = this.state.userInput;
-    
+    const { person } = e.target;
+    postPerson(person.value)
+      .then(newPerson => {
+        this.props.addPerson(newPerson);
+      })
+      .then(() => {
+        this.props.history.push('/adopt');
+      });
   };
   render() {
-    const people = this.props.people;
-
     // maps over the people in the database and prints them in a list
-    const peopleMap = people.map(people => {
+    const people = this.props.people;
+    console.log(people);
+
+    const peopleMap = people.map(person => {
       return (
-        <div key={people} className='person'>
-          <h3>{people}</h3>
+        <div className='person'>
+          <h3>{person}</h3>
         </div>
       );
     });
@@ -56,9 +64,12 @@ export default class Adoption extends Component {
         </Link>
         <form className='queue-form' onSubmit={e => this.handleSubmit(e)}>
           <input
+            name='person'
+            id='person'
             type='text'
             placeholder='Enter Name in Queue'
             onChange={e => this.onChange(e)}
+            value={this.state.people}
           ></input>
           <button type='submit'> Submit </button>
         </form>

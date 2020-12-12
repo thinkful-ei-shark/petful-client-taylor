@@ -11,6 +11,13 @@ export default class App extends Component {
     pets: [],
     error: null,
   };
+
+  addPerson = newPerson => {
+    this.setState({
+      people: [...this.state.people, newPerson],
+    });
+  };
+
   componentDidMount() {
     let promises = [fetchPeople(), fetchPets()];
     Promise.all(promises)
@@ -36,6 +43,7 @@ export default class App extends Component {
             render={props => (
               <Adoption
                 {...props}
+                addPerson={this.addPerson}
                 people={this.state.people}
                 pets={this.state.pets}
               />
