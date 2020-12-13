@@ -8,6 +8,8 @@ import {
   fetchPets,
   fetchDogs,
   fetchCats,
+  fetchDogList,
+  fetchCatList,
 } from './services/api-service';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -41,7 +43,14 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    let promises = [fetchPeople(), fetchPets(), fetchDogs(), fetchCats()];
+    let promises = [
+      fetchPeople(),
+      fetchPets(),
+      fetchDogs(),
+      fetchCats(),
+      fetchDogList(),
+      fetchCatList(),
+    ];
     Promise.all(promises)
       .then(values =>
         this.setState({
@@ -49,6 +58,8 @@ export default class App extends Component {
           pets: values[1],
           dogs: values[2],
           cats: values[3],
+          dogList: values[4],
+          catList: values[5],
         })
       )
       .catch(error => {
@@ -58,8 +69,6 @@ export default class App extends Component {
       });
   }
   render() {
-    console.log(this.state.dogList);
-    console.log(this.state.people);
     return (
       <Router>
         <div className='App'>

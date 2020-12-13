@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postPerson, adoptPet } from '../services/api-service';
+import { postCatPerson, adoptPet } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -25,7 +25,7 @@ export default class Adoption extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { person } = e.target;
-    postPerson(person.value)
+    postCatPerson(person.value)
       .then(newPerson => {
         this.props.catListAdd(newPerson);
       })
@@ -47,8 +47,9 @@ export default class Adoption extends Component {
 
     // if there is a list of cats, render them to the page
     let catHTML;
-    if (this.props.cats.cat) {
-      let cat = this.props.cats.cat;
+    console.log(this.props.cats);
+    if (this.props.cats) {
+      let cat = this.props.cats;
       catHTML = (
         <div className='animal'>
           <img alt='animal to adopt' src={cat.imageURL} />

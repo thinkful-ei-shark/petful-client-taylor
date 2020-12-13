@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postPerson, adoptPet } from '../services/api-service';
+import { postDogPerson, adoptPet } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -25,7 +25,7 @@ export default class Adoption extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { person } = e.target;
-    postPerson(person.value)
+    postDogPerson(person.value)
       .then(newPerson => {
         this.props.dogListAdd(newPerson);
       })
