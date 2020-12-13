@@ -47,7 +47,7 @@ export default class App extends Component {
   };
 
   adoptDog = () => {
-    this.setState({ dogs: this.state.dogs.next === this.state.dogs.first });
+    this.setState({ dogs: this.state.dogs.shift() });
   };
 
   componentDidMount() {
