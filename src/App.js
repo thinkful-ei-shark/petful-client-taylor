@@ -24,6 +24,10 @@ export default class App extends Component {
     error: null,
   };
 
+  removeDogPerson = () => {};
+
+  removeCatPerson = () => {};
+
   dogListAdd = newPerson => {
     this.setState({
       dogList: [...this.state.dogList, newPerson],
@@ -36,9 +40,15 @@ export default class App extends Component {
     });
   };
 
-  adopt = () => {
+  adoptCat = () => {
     this.setState({
-      pets: this.state.pets.first,
+      cats: this.state.cats,
+    });
+  };
+
+  adoptDog = () => {
+    this.setState({
+      dogs: this.state.dogs,
     });
   };
 
@@ -78,7 +88,8 @@ export default class App extends Component {
             render={props => (
               <CatAdoption
                 {...props}
-                adopt={this.adopt}
+                adoptCat={this.adoptCat}
+                removeCatPerson={this.removeCatPerson}
                 catListAdd={this.catListAdd}
                 people={this.state.people}
                 catList={this.state.catList}
@@ -92,7 +103,8 @@ export default class App extends Component {
             render={props => (
               <DogAdoption
                 {...props}
-                adopt={this.adopt}
+                adoptDog={this.adoptDog}
+                removeCatPerson={this.removeDogPerson}
                 dogListAdd={this.dogListAdd}
                 people={this.state.people}
                 dogList={this.state.dogList}

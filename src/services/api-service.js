@@ -105,8 +105,23 @@ export const fetchCats = () => {
   });
 };
 
-export const adoptPet = () => {
-  return fetch(`${config.API_BASE_URL}/pets`, {
+export const serverAdoptCat = () => {
+  return fetch(`${config.API_BASE_URL}/cats`, {
+    method: 'DELETE',
+    header: {
+      'content-type': 'application/json',
+    },
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error(
+        `Something went wrong adopting this pet, please try again later`
+      );
+    }
+  });
+};
+
+export const serverAdoptDog = () => {
+  return fetch(`${config.API_BASE_URL}/dogs`, {
     method: 'DELETE',
     header: {
       'content-type': 'application/json',

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postDogPerson, adoptPet } from '../services/api-service';
+import { postDogPerson, serverAdoptDog } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -17,9 +17,13 @@ export default class Adoption extends Component {
   }
 
   handleAdoption = e => {
-    adoptPet().then(dog => {
-      this.props.adoptPet(dog);
-    });
+    serverAdoptDog()
+      .then(dog => {
+        this.props.adoptDog(dog);
+      })
+      .then(() => {
+        this.props.history.push('/dog-adopt');
+      });
   };
 
   handleSubmit = e => {
@@ -47,8 +51,8 @@ export default class Adoption extends Component {
 
     // if there is a list of dogs, render them to the page
     let dogHTML;
-    if (this.props.dogs.dog) {
-      let dog = this.props.dogs.dog;
+    if (this.props.dogs) {
+      let dog = this.props.dogs;
       dogHTML = (
         <div className='animal'>
           <img alt='animal to adopt' src={dog.imageURL} />
@@ -59,7 +63,10 @@ export default class Adoption extends Component {
             <p> {dog.description} </p>
             <p> {dog.story} </p>
           </div>
-          <button onClick={e => this.handleAdoption(e)} className='adopt-me'> Adopt Me! </button>
+          <button onClick={e => this.handleAdoption(e)} className='adopt-me'>
+            {' '}
+            Adopt Me!{' '}
+          </button>
         </div>
       );
     }

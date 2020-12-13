@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postCatPerson, adoptPet } from '../services/api-service';
+import { postCatPerson, serverAdoptCat } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -17,8 +17,12 @@ export default class Adoption extends Component {
   }
 
   handleAdoption = e => {
-    adoptPet().then(pet => {
-      this.props.adopt(pet)
+    serverAdoptCat()
+    .then(cat => {
+      this.props.adoptCat(cat)
+    })
+    .then(() => {
+      this.props.history.push('/cat-adopt');
     })
   }
 
@@ -47,7 +51,6 @@ export default class Adoption extends Component {
 
     // if there is a list of cats, render them to the page
     let catHTML;
-    console.log(this.props.cats);
     if (this.props.cats) {
       let cat = this.props.cats;
       catHTML = (
