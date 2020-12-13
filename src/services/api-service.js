@@ -9,7 +9,7 @@ export const fetchPeople = () => {
   });
 };
 
-export const postPerson = (person) => {
+export const postPerson = person => {
   return fetch(`${config.API_BASE_URL}/people`, {
     method: 'POST',
     headers: {
@@ -23,8 +23,8 @@ export const postPerson = (person) => {
       return Promise.reject(res.statusText);
     }
     return res.json();
-  })
-}
+  });
+};
 
 export const fetchPets = () => {
   return fetch(`${config.API_BASE_URL}/pets`).then(res => {
@@ -32,5 +32,38 @@ export const fetchPets = () => {
       return Promise.reject(res.statusText);
     }
     return res.json();
+  });
+};
+
+export const fetchDogs = () => {
+  return fetch(`${config.API_BASE_URL}/pets/dogs`).then(res => {
+    if (!res.ok) {
+      return Promise.reject(res.statusText);
+    }
+    return res.json();
+  })
+}
+
+export const fetchCats = () => {
+  return fetch(`${config.API_BASE_URL}/pets/cats`).then(res => {
+    if (!res.ok) {
+      return Promise.reject(res.statusText);
+    }
+    return res.json();
+  })
+}
+
+export const adoptPet = () => {
+  return fetch(`${config.API_BASE_URL}/pets`, {
+    method: 'DELETE',
+    header: {
+      'content-type': 'application/json',
+    },
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error(
+        `Something went wrong adopting this pet, please try again later`
+      );
+    }
   });
 };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postPerson } from '../services/api-service';
+import { postPerson, adoptPet } from '../services/api-service';
 
 export default class Adoption extends Component {
   constructor() {
@@ -16,23 +16,28 @@ export default class Adoption extends Component {
     });
   }
 
+  handleAdoption = e => {
+    adoptPet().then(dog => {
+      this.props.adoptPet(dog);
+    });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { person } = e.target;
     postPerson(person.value)
       .then(newPerson => {
-        this.props.addPerson(newPerson);
+        this.props.dogListAdd(newPerson);
       })
       .then(() => {
-        this.props.history.push('/adopt');
+        this.props.history.push('/dog-adopt');
       });
   };
   render() {
     // maps over the people in the database and prints them in a list
-    const people = this.props.people;
-    console.log(people);
+    const dogList = this.props.dogList;
 
-    const peopleMap = people.map(person => {
+    const dogListMap = dogList.map(person => {
       return (
         <div className='person'>
           <h3>{person}</h3>
@@ -40,20 +45,21 @@ export default class Adoption extends Component {
       );
     });
 
-    // if there is a list of cats, render them to the page
-    let catHTML;
-    if (this.props.pets.cat) {
-      let cat = this.props.pets.cat;
-      catHTML = (
+    // if there is a list of dogs, render them to the page
+    let dogHTML;
+    if (this.props.dogs.dog) {
+      let dog = this.props.dogs.dog;
+      dogHTML = (
         <div className='animal'>
-          <img alt='animal to adopt' src={cat.imageURL} />
+          <img alt='animal to adopt' src={dog.imageURL} />
           <div className='content'>
-            <h4> {cat.name} </h4>
-            <p> Age: {cat.age} </p>
-            <p> Breed: {cat.breed} </p>
-            <p> {cat.description} </p>
-            <p> {cat.story} </p>
+            <h4> {dog.name} </h4>
+            <p> Age: {dog.age} </p>
+            <p> Breed: {dog.breed} </p>
+            <p> {dog.description} </p>
+            <p> {dog.story} </p>
           </div>
+          <button onClick={e => this.handleAdoption(e)} className='adopt-me'> Adopt Me! </button>
         </div>
       );
     }
@@ -74,14 +80,10 @@ export default class Adoption extends Component {
           <button type='submit'> Submit </button>
         </form>
 
-        <h3> Adoptable Animals </h3>
-        <select>
-          <option> Dogs </option>
-          <option> Cats </option>
-        </select>
+        <h3> Adoptable Dogs </h3>
 
-        <div className='list'>{catHTML}</div>
-        <div className='queue'>{peopleMap}</div>
+        <div className='list'>{dogHTML}</div>
+        <div className='queue'>{dogListMap}</div>
       </div>
     );
   }
