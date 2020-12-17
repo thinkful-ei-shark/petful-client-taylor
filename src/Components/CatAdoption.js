@@ -11,6 +11,7 @@ export default class DogAdoption extends Component {
     super();
     this.state = {
       userInput: 0,
+      intervalId: 0,
     };
   }
 
@@ -21,23 +22,29 @@ export default class DogAdoption extends Component {
   }
 
   componentDidMount() {
-    // let adding = false;
-    // let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
-    // setInterval(() => {
-    //   if (adding && this.props.dogList.length >= 5) {
-    //     adding = false;
-    //   }
-    //   if (this.props.dogList.length <= 1) {
-    //     adding = true;
-    //   }
+    let adding = false;
+    let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
+    this.intervalId = setInterval(() => {
+      if (adding && this.props.catList.length >= 5) {
+        adding = false;
+      }
+      if (this.props.catList.length <= 1) {
+        adding = true;
+      }
 
-    //   if (adding) {
-    //     const random = Math.floor(Math.random() * newUsers.length);
-    //     this.addPerson(newUsers[random]);
-    //   } else {
-    //     this.handleAdoption();
-    //   }
-    // }, 5000);
+      if (adding) {
+        const random = Math.floor(Math.random() * newUsers.length);
+        this.addPerson(newUsers[random]);
+      } else {
+        this.handleAdoption();
+      }
+      if (this.props.cats.length <= 0) {
+        return clearInterval(this.intervalId);
+      }
+    }, 5000);
+  }
+  componentWillUnmount() {
+    return clearInterval(this.intervalId);
   }
   handleAdoption = e => {
     serverAdoptCat()
@@ -45,24 +52,16 @@ export default class DogAdoption extends Component {
         this.props.adoptCat(cat);
       })
       .then(() => {
-        deleteCatPerson()
-          .then(person => {
-            this.props.removeCatPerson(person);
-          })
-          .then(() => {
-            // this.props.history.push('/dog-adopt');
-          });
+        deleteCatPerson().then(person => {
+          this.props.removeCatPerson(person);
+        });
       });
   };
 
   addPerson = name => {
-    postCatPerson(name)
-      .then(newPerson => {
-        this.props.catListAdd(newPerson);
-      })
-      .then(() => {
-        // this.props.history.push('/dog-adopt');
-      });
+    postCatPerson(name).then(newPerson => {
+      this.props.catListAdd(newPerson);
+    });
   };
 
   handleSubmit = e => {
@@ -75,9 +74,9 @@ export default class DogAdoption extends Component {
     // maps over the people in the database and prints them in a list
     const catList = this.props.catList;
 
-    const catListMap = catList.map(person => {
+    const catListMap = catList.map((person, i) => {
       return (
-        <div key={person} className='person'>
+        <div key={i} className='person'>
           <h3>{person}</h3>
         </div>
       );
@@ -126,7 +125,7 @@ export default class DogAdoption extends Component {
         </form>
 
         <h3> Adoptable Cats </h3>
-
+        {this.props.cats.length <= 0 ? <h2> Shelter is empty </h2> : null}
         <div className='list'>{catHTML}</div>
         <div className='queue'>{catListMap}</div>
       </div>

@@ -32,7 +32,7 @@ export default class App extends Component {
     );
   };
 
-  removeDogPerson = () => {
+  removeCatPerson = () => {
     fetchCatList().then(value =>
       this.setState({
         catList: value,
@@ -98,8 +98,7 @@ export default class App extends Component {
       });
   }
   render() {
-    console.log(this.state.cats);
-    console.log(this.state.dogs);
+    console.log(this.state.dogList);
     return (
       <Router>
         <div className='App'>

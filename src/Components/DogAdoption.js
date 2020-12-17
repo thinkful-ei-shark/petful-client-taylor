@@ -11,6 +11,8 @@ export default class DogAdoption extends Component {
     super();
     this.state = {
       userInput: 0,
+      intervalId: 0,
+      enabled: false,
     };
   }
 
@@ -21,23 +23,30 @@ export default class DogAdoption extends Component {
   }
 
   componentDidMount() {
-    // let adding = false;
-    // let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
-    // setInterval(() => {
-    //   if (adding && this.props.dogList.length >= 5) {
-    //     adding = false;
-    //   }
-    //   if (this.props.dogList.length <= 1) {
-    //     adding = true;
-    //   }
+    let adding = false;
+    let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
+    this.intervalId = setInterval(() => {
+      if (adding && this.props.dogList.length >= 5) {
+        adding = false;
+      }
+      if (this.props.dogList.length <= 1) {
+        adding = true;
+      }
 
-    //   if (adding) {
-    //     const random = Math.floor(Math.random() * newUsers.length);
-    //     this.addPerson(newUsers[random]);
-    //   } else {
-    //     this.handleAdoption();
-    //   }
-    // }, 5000);
+      if (adding) {
+        const random = Math.floor(Math.random() * newUsers.length);
+        this.addPerson(newUsers[random]);
+      } else {
+        this.handleAdoption();
+      }
+      if (this.props.dogs.length <= 0) {
+        return clearInterval(this.intervalId);
+      }
+    }, 5000);
+  }
+
+  componentWillUnmount() {
+    return clearInterval(this.intervalId);
   }
   handleAdoption = e => {
     serverAdoptDog()
@@ -45,24 +54,27 @@ export default class DogAdoption extends Component {
         this.props.adoptDog(dog);
       })
       .then(() => {
-        deleteDogPerson()
-          .then(person => {
-            this.props.removeDogPerson(person);
-          })
-          .then(() => {
-            this.props.history.push('/dog-adopt');
+        deleteDogPerson().then(person => {
+          this.props.removeDogPerson(person);
+        });
+      })
+      .then(() => {
+        if (this.props.dogList.length === 1) {
+          this.setState({
+            enabled: true,
           });
+        } else {
+          this.setState({
+            enabled: false,
+          });
+        }
       });
   };
 
   addPerson = name => {
-    postDogPerson(name)
-      .then(newPerson => {
-        this.props.dogListAdd(newPerson);
-      })
-      .then(() => {
-        // this.props.history.push('/dog-adopt');
-      });
+    postDogPerson(name).then(newPerson => {
+      this.props.dogListAdd(newPerson);
+    });
   };
 
   handleSubmit = e => {
@@ -75,9 +87,9 @@ export default class DogAdoption extends Component {
     // maps over the people in the database and prints them in a list
     const dogList = this.props.dogList;
 
-    const dogListMap = dogList.map(person => {
+    const dogListMap = dogList.map((person, i) => {
       return (
-        <div key={person} className='person'>
+        <div key={i} className='person'>
           <h3>{person}</h3>
         </div>
       );
@@ -101,13 +113,18 @@ export default class DogAdoption extends Component {
             <p> {dog.description} </p>
             <p> {dog.story} </p>
           </div>
-          <button onClick={e => this.handleAdoption(e)} className='adopt-me'>
+          <button
+            disabled={!this.state.enabled}
+            onClick={e => this.handleAdoption(e)}
+            className='adopt-me'
+          >
             {' '}
             Adopt Me!{' '}
           </button>
         </div>
       );
     }
+
     return (
       <div className='adoption'>
         <Link to='/'>
@@ -126,7 +143,7 @@ export default class DogAdoption extends Component {
         </form>
 
         <h3> Adoptable Dogs </h3>
-
+        {this.props.dogs.length <= 0 ? <h2> Shelter is empty </h2> : null}
         <div className='list'>{dogHTML}</div>
         <div className='queue'>{dogListMap}</div>
       </div>
