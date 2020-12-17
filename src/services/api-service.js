@@ -27,23 +27,6 @@ export const fetchCatList = () => {
   });
 };
 
-// export const postPerson = person => {
-//   return fetch(`${config.API_BASE_URL}/people`, {
-//     method: 'POST',
-//     headers: {
-//       'content-type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       person,
-//     }),
-//   }).then(res => {
-//     if (!res.ok) {
-//       return Promise.reject(res.statusText);
-//     }
-//     return res.json();
-//   });
-// };
-
 export const postDogPerson = person => {
   return fetch(`${config.API_BASE_URL}/dog-list`, {
     method: 'POST',
@@ -61,6 +44,21 @@ export const postDogPerson = person => {
   });
 };
 
+export const deleteDogPerson = () => {
+  return fetch(`${config.API_BASE_URL}/dog-list`, {
+    method: 'DELETE',
+    headers: {
+      'content-type': 'application/json',
+    },
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error(
+        `Something went wrong adopting this pet, please try again later`
+      );
+    }
+  });
+};
+
 export const postCatPerson = person => {
   return fetch(`${config.API_BASE_URL}/cat-list`, {
     method: 'POST',
@@ -75,6 +73,21 @@ export const postCatPerson = person => {
       return Promise.reject(res.statusText);
     }
     return res.json();
+  });
+};
+
+export const deleteCatPerson = () => {
+  return fetch(`${config.API_BASE_URL}/cat-list`, {
+    method: 'DELETE',
+    headers: {
+      'content-type': 'application/json',
+    },
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error(
+        `Something went wrong adopting this pet, please try again later`
+      );
+    }
   });
 };
 

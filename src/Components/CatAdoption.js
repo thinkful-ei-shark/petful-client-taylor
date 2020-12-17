@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { postCatPerson, serverAdoptCat } from '../services/api-service';
+import {
+  postCatPerson,
+  serverAdoptCat,
+  deleteCatPerson,
+} from '../services/api-service';
 
-export default class Adoption extends Component {
+export default class DogAdoption extends Component {
   constructor() {
     super();
     this.state = {
@@ -16,45 +20,79 @@ export default class Adoption extends Component {
     });
   }
 
+  componentDidMount() {
+    // let adding = false;
+    // let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
+    // setInterval(() => {
+    //   if (adding && this.props.dogList.length >= 5) {
+    //     adding = false;
+    //   }
+    //   if (this.props.dogList.length <= 1) {
+    //     adding = true;
+    //   }
+
+    //   if (adding) {
+    //     const random = Math.floor(Math.random() * newUsers.length);
+    //     this.addPerson(newUsers[random]);
+    //   } else {
+    //     this.handleAdoption();
+    //   }
+    // }, 5000);
+  }
   handleAdoption = e => {
     serverAdoptCat()
-    .then(cat => {
-      this.props.adoptCat(cat)
-    })
-    .then(() => {
-      this.props.history.push('/cat-adopt');
-    })
-  }
+      .then(cat => {
+        this.props.adoptCat(cat);
+      })
+      .then(() => {
+        deleteCatPerson()
+          .then(person => {
+            this.props.removeCatPerson(person);
+          })
+          .then(() => {
+            // this.props.history.push('/dog-adopt');
+          });
+      });
+  };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { person } = e.target;
-    postCatPerson(person.value)
+  addPerson = name => {
+    postCatPerson(name)
       .then(newPerson => {
         this.props.catListAdd(newPerson);
       })
       .then(() => {
-        this.props.history.push('/cat-adopt');
+        // this.props.history.push('/dog-adopt');
       });
   };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { person } = e.target;
+    this.addPerson(person.value);
+  };
+
   render() {
     // maps over the people in the database and prints them in a list
     const catList = this.props.catList;
 
     const catListMap = catList.map(person => {
       return (
-        <div className='person'>
+        <div key={person} className='person'>
           <h3>{person}</h3>
         </div>
       );
     });
+    let catIndex;
+    for (let i = 0; i < this.props.cats.length; i++) {
+      catIndex = this.props.cats[i];
+    }
 
     // if there is a list of cats, render them to the page
     let catHTML;
-    if (this.props.cats) {
-      let cat = this.props.cats;
+    if (catIndex) {
+      let cat = catIndex;
       catHTML = (
-        <div className='animal'>
+        <div key={cat.id} className='animal'>
           <img alt='animal to adopt' src={cat.imageURL} />
           <div className='content'>
             <h4> {cat.name} </h4>
@@ -63,7 +101,10 @@ export default class Adoption extends Component {
             <p> {cat.description} </p>
             <p> {cat.story} </p>
           </div>
-          <button onClick={e => this.handleAdoption(e)} className='adopt-me'> Adopt Me! </button>
+          <button onClick={e => this.handleAdoption(e)} className='adopt-me'>
+            {' '}
+            Adopt Me!{' '}
+          </button>
         </div>
       );
     }

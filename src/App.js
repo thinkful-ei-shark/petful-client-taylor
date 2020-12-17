@@ -24,9 +24,21 @@ export default class App extends Component {
     error: null,
   };
 
-  removeDogPerson = () => {};
+  removeDogPerson = () => {
+    fetchDogList().then(value =>
+      this.setState({
+        dogList: value,
+      })
+    );
+  };
 
-  removeCatPerson = () => {};
+  removeDogPerson = () => {
+    fetchCatList().then(value =>
+      this.setState({
+        catList: value,
+      })
+    );
+  };
 
   dogListAdd = newPerson => {
     this.setState({
@@ -41,13 +53,21 @@ export default class App extends Component {
   };
 
   adoptCat = () => {
-    this.setState({
-      cats: this.state.cats,
-    });
+    this.setState({ cats: this.state.cats.slice(1) });
+    fetchCats().then(value =>
+      this.setState({
+        cats: value,
+      })
+    );
   };
 
   adoptDog = () => {
-    this.setState({ dogs: this.state.dogs.shift() });
+    this.setState({ dogs: this.state.dogs.slice(1) });
+    fetchDogs().then(value =>
+      this.setState({
+        dogs: value,
+      })
+    );
   };
 
   componentDidMount() {
@@ -59,6 +79,7 @@ export default class App extends Component {
       fetchDogList(),
       fetchCatList(),
     ];
+
     Promise.all(promises)
       .then(values =>
         this.setState({
@@ -77,6 +98,8 @@ export default class App extends Component {
       });
   }
   render() {
+    console.log(this.state.cats);
+    console.log(this.state.dogs);
     return (
       <Router>
         <div className='App'>
@@ -89,9 +112,7 @@ export default class App extends Component {
                 adoptCat={this.adoptCat}
                 removeCatPerson={this.removeCatPerson}
                 catListAdd={this.catListAdd}
-                people={this.state.people}
                 catList={this.state.catList}
-                pets={this.state.pets}
                 cats={this.state.cats}
               />
             )}
@@ -102,11 +123,9 @@ export default class App extends Component {
               <DogAdoption
                 {...props}
                 adoptDog={this.adoptDog}
-                removeCatPerson={this.removeDogPerson}
+                removeDogPerson={this.removeDogPerson}
                 dogListAdd={this.dogListAdd}
-                people={this.state.people}
                 dogList={this.state.dogList}
-                pets={this.state.pets}
                 dogs={this.state.dogs}
               />
             )}
