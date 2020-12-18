@@ -12,7 +12,8 @@ export default class DogAdoption extends Component {
     this.state = {
       userInput: 0,
       intervalId: 0,
-      enabled: false,
+      adoptEnabled: false,
+      addPersonDisabled: false,
     };
   }
 
@@ -29,15 +30,23 @@ export default class DogAdoption extends Component {
       if (adding && this.props.dogList.length >= 5) {
         adding = false;
       }
-      if (this.props.dogList.length <= 1) {
+      if (this.props.dogList.length === 0) {
         adding = true;
       }
 
       if (adding) {
         const random = Math.floor(Math.random() * newUsers.length);
         this.addPerson(newUsers[random]);
+        this.setState({
+          addPersonDisabled: true,
+          adoptEnabled: false,
+        });
       } else {
         this.handleAdoption();
+        this.setState({
+          addPersonDisabled: false,
+          adoptEnabled: true,
+        });
       }
       if (this.props.dogs.length <= 0) {
         return clearInterval(this.intervalId);
@@ -59,13 +68,13 @@ export default class DogAdoption extends Component {
         });
       })
       .then(() => {
-        if (this.props.dogList.length === 1) {
+        if (this.props.dogList.length === 2) {
           this.setState({
-            enabled: true,
+            adoptEnabled: true,
           });
         } else {
           this.setState({
-            enabled: false,
+            adoptEnabled: false,
           });
         }
       });
@@ -114,7 +123,7 @@ export default class DogAdoption extends Component {
             <p> {dog.story} </p>
           </div>
           <button
-            disabled={!this.state.enabled}
+            disabled={!this.state.adoptEnabled}
             onClick={e => this.handleAdoption(e)}
             className='adopt-me'
           >
@@ -139,13 +148,18 @@ export default class DogAdoption extends Component {
             onChange={e => this.onChange(e)}
             value={this.state.people}
           ></input>
-          <button type='submit'> Submit </button>
+          <button disabled={this.state.addPersonDisabled} type='submit'>
+            {' '}
+            Submit{' '}
+          </button>
         </form>
-
         <h3> Adoptable Dogs </h3>
         {this.props.dogs.length <= 0 ? <h2> Shelter is empty </h2> : null}
         <div className='list'>{dogHTML}</div>
-        <div className='queue'>{dogListMap}</div>
+        <div className='queue'>{dogListMap}</div>{' '}
+        {this.props.dogList.length <= 0 ? (
+          <h2> Congratulations on your new dog! </h2>
+        ) : null}{' '}
       </div>
     );
   }
