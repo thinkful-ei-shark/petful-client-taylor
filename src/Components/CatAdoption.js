@@ -23,7 +23,7 @@ export default class DogAdoption extends Component {
     });
   }
 
-  componentDidMount() {
+  intervalForDemo() {
     let adding = false;
     let newUsers = ['Taylor', 'BagleBites', 'Raph', 'Laney', 'Bryan'];
     this.intervalId = setInterval(() => {
@@ -82,6 +82,7 @@ export default class DogAdoption extends Component {
   addPerson = name => {
     postCatPerson(name).then(newPerson => {
       this.props.catListAdd(newPerson);
+      this.intervalForDemo();
     });
   };
 
