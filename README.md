@@ -4,7 +4,7 @@ Server Repo: https://github.com/thinkful-ei-shark/petful-server-taylor
 Client Repo: https://github.com/thinkful-ei-shark/petful-client-taylor
 
 ##### Live Links 
-Vercel Client - Live Link https://petful-client-template-xi.vercel.app/
+Vercel Client - Live Link https://petful-client-template.tphelps93.vercel.app/
 Heroku Server - Live Link https://cryptic-ridge-09184.herokuapp.com/
 
 ## Summary
